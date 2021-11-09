@@ -17,7 +17,7 @@ export default function Login() {
   const [state, setState] = useState("");
 
   function openWindow() {
-    electron.ipc.send({ client, secret, redirect, scope, state });
+    electron.ipc.send("AUTH", { client, secret, redirect, scope, state });
   }
 
   return (

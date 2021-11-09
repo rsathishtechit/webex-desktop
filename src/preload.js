@@ -2,12 +2,13 @@ import { ipcRenderer, contextBridge } from "electron";
 
 contextBridge.exposeInMainWorld("electron", {
   ipc: {
-    send(payload) {
-      ipcRenderer.send("AUTH", payload);
+    send(name, payload) {
+      console.log(name, payload);
+      ipcRenderer.send(name, payload);
     },
-    receive: (func) => {
+    receive: (name, func) => {
       // Deliberately strip event as it includes `sender`
-      ipcRenderer.on("CODE", (event, code) => func(code));
+      ipcRenderer.on(name, (_, code) => func(code));
     },
   },
   batteryApi: {},

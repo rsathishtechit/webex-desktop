@@ -54,7 +54,7 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
 
     if (code || error) {
       // Close the browser if code found or error
-      if (code) event.sender.send("CODE", code);
+      if (code) event.sender.send("CODE", { client, secret, redirect, code });
       webExLogin.destroy();
     }
   }
