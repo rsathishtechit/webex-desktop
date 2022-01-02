@@ -48,9 +48,6 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
     width: 800,
     modal: true,
   });
-  console.log(
-    `https://webexapis.com/v1/authorize?response_type=code&client_id=${client}&redirect_uri=${redirect}&scope=${scope}&state=${state}`
-  );
   webExLogin.loadURL(
     `https://webexapis.com/v1/authorize?response_type=code&client_id=${client}&redirect_uri=${redirect}&scope=${scope}&state=${state}`
   );
@@ -77,6 +74,7 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
           code,
         });
       }
+
       webExLogin.destroy();
     }
   }
