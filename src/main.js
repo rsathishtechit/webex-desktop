@@ -1,11 +1,18 @@
-const { red } = require("@material-ui/core/colors");
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, session } = require("electron");
+const path = require("path");
+const os = require("os");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require
   app.quit();
 }
+
+// on macOS
+const reactDevToolsPath = path.join(
+  os.homedir(),
+  "Library/Application Support/Google/Chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.22.0_0"
+);
 
 const createWindow = () => {
   // Create the browser window.
@@ -31,12 +38,19 @@ const createWindow = () => {
 // Some APIs can only be used after this event occurs.
 app.on("ready", createWindow);
 
+app.whenReady().then(async () => {
+  await session.defaultSession.loadExtension(reactDevToolsPath);
+});
+
 ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
   const webExLogin = new BrowserWindow({
     height: 600,
     width: 800,
     modal: true,
   });
+  console.log(
+    `https://webexapis.com/v1/authorize?response_type=code&client_id=${client}&redirect_uri=${redirect}&scope=${scope}&state=${state}`
+  );
   webExLogin.loadURL(
     `https://webexapis.com/v1/authorize?response_type=code&client_id=${client}&redirect_uri=${redirect}&scope=${scope}&state=${state}`
   );
@@ -51,11 +65,18 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
     error = current.searchParams.has("error")
       ? current.searchParams.get("error")
       : false;
-
+    console.log(error);
     if (code || error) {
       // Close the browser if code found or error
-      if (code)
-        event.sender.send("CODE", { client, secret, scopre, state, code });
+      if (code) {
+        event.sender.send("CODE", {
+          client,
+          secret,
+          scope,
+          state,
+          code,
+        });
+      }
       webExLogin.destroy();
     }
   }

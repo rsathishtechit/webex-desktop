@@ -13,11 +13,17 @@ export default function Login() {
   const [client, setClient] = useState("");
   const [secret, setSecret] = useState("");
   const [redirect, setRedirect] = useState("");
-  const [scope, setScope] = useState(`spark:all`);
+  const [scope, setScope] = useState(``);
   const [state, setState] = useState("");
 
   function openWindow() {
-    electron.ipc.send({ client, secret, redirect, scope, state });
+    electron.ipcRenderer.send("AUTH", {
+      client,
+      secret,
+      redirect,
+      scope,
+      state,
+    });
   }
 
   return (
