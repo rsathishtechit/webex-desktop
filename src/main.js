@@ -72,6 +72,7 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
           scope,
           state,
           code,
+          redirect,
         });
       }
 
