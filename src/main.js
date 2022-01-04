@@ -53,7 +53,6 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
   );
   webExLogin.show();
   function handleCallback(url) {
-    console.log(url);
     let code, error;
     const current = new URL(url);
     code = current.searchParams.has("code")
@@ -62,7 +61,6 @@ ipcMain.on("AUTH", (event, { client, secret, redirect, scope, state }) => {
     error = current.searchParams.has("error")
       ? current.searchParams.get("error")
       : false;
-    console.log(error);
     if (code || error) {
       // Close the browser if code found or error
       if (code) {
