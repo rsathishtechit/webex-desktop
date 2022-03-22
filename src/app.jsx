@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import Login from "./components/login";
+import Login from "./pages/login";
 
 class App extends React.Component {
   componentDidMount() {
@@ -8,13 +8,6 @@ class App extends React.Component {
     electron.ipcRenderer.receive(
       "CODE",
       async ({ client, secret, redirect, code }) => {
-        console.log({
-          grant_type: "authorization_code",
-          client_id: client,
-          client_secret: secret,
-          code: code,
-          redirect_uri: redirect,
-        });
         const res = await fetch("https://webexapis.com/v1/access_token", {
           method: "POST",
           headers: {
